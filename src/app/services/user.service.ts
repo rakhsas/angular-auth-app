@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from './../../environments/environment';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
+import { register } from '../models/register';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class UserService {
   login(form:User):Observable<any>{
     return this.http.post(this.URL + 'api/auth/login', form);
   }
-  register(form:User):Observable<any> {
+  register(form:register):Observable<any> {
     return this.http.post(this.URL + 'api/auth/register', form );
   }
 }
