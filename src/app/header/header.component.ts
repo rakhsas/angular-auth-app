@@ -12,6 +12,7 @@ import { AuthService } from '../services/auth.service';
 export class HeaderComponent {
   showBtn: boolean = true;
   Logged: boolean = false;
+  userName: string = "Root"
   constructor( private router: Router, private authService: AuthService ) {}
   ngOnInit() {
     this.router.events
@@ -27,8 +28,16 @@ export class HeaderComponent {
         })
       )
       .subscribe((url: string | undefined) => {
-        this.showBtn = url !== '/login' && url !== '/register';
-      });
-      this.Logged = !this.authService.isAuthenticated();
+        this.showBtn = url !== '/login' && url !== '/register' && !this.authService.isAuthenticated();
     }
+    );
+    this.Logged = this.authService.isAuthenticated();
+    // console.log(this.Logged);
+  }
+
+  LoggedOUT() {
+    localStorage.removeItem("Token");
+    this.Logged = false;
+    this.router.navigate(['/'])
+  }
 }
