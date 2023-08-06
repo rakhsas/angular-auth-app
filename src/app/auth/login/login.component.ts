@@ -34,13 +34,13 @@ export class LoginComponent {
 				setTimeout(() => {
 					this.loginValid = 0
 					this.router.navigate(["/profile"]);
-				}, 4000);
+				}, 3000);
 			},
 			(errorResponse: HttpErrorResponse) => {
 				this.loginValid = -1;
 				setTimeout(() => {
 					this.loginValid = 0
-				}, 4000);
+				}, 3000);
 			}
 		)
 	}

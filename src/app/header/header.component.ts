@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavigationEnd, Router, NavigationStart } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
@@ -13,7 +13,11 @@ export class HeaderComponent {
   showBtn: boolean = true;
   Logged: boolean = false;
   userName: string = "Root"
-  constructor( private router: Router, private authService: AuthService ) {}
+  constructor( 
+    private router: Router,
+    private authService: AuthService,
+    private changeDetectorRef: ChangeDetectorRef
+    ) {}
   ngOnInit() {
     this.router.events
       .pipe(
@@ -29,10 +33,10 @@ export class HeaderComponent {
       )
       .subscribe((url: string | undefined) => {
         this.showBtn = url !== '/login' && url !== '/register' && !this.authService.isAuthenticated();
-    }
+        this.Logged = this.authService.isAuthenticated();
+        this.changeDetectorRef.detectChanges();
+      }
     );
-    this.Logged = this.authService.isAuthenticated();
-    // console.log(this.Logged);
   }
 
   LoggedOUT() {
