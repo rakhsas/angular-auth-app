@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenExpirationService } from '../services/token-expiration.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -8,24 +9,17 @@ import { TokenExpirationService } from '../services/token-expiration.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-	// subscription :Subscription;
+	Logged: boolean = false;
 	expiredToken: boolean = false;
-	// constructor (
-	// 	private router:Router,
-	// 	private tokenExpirationService: TokenExpirationService)
-	// {}
+	constructor (
+		private router:Router,
+		private tokenExpirationService: TokenExpirationService,
+		private authService: AuthService
+		)
+	{}
 	ngOnInit() {
-		// this.subscription = this.tokenExpirationService.expiredToken.subscribe( expired => {
-		// 	this.expiredToken = expired;
-		// })
-		// if ( this.expiredToken )
-		// {
-		// 	setTimeout(() => {
-		// 		this.router.navigate(['/login']);
-		// 	}, 4000);
-		// }
+		this.Logged = !this.authService.isAuthenticated();
 	}
 	ngOnDestroy() {
-		// this.subscription.unsubscribe();
 	}
 }

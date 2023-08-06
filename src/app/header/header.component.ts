@@ -34,7 +34,7 @@ export class HeaderComponent {
       .subscribe((url: string | undefined) => {
         this.showBtn = url !== '/login' && url !== '/register' && !this.authService.isAuthenticated();
         this.Logged = this.authService.isAuthenticated();
-        this.changeDetectorRef.detectChanges();
+        // this.changeDetectorRef.detectChanges();
       }
     );
   }
