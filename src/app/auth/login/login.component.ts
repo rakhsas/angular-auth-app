@@ -8,6 +8,7 @@ import { Dismiss } from "flowbite";
 import { Subscription } from 'rxjs';
 import { TokenExpirationService } from 'src/app/services/token-expiration.service';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { localService } from 'src/app/services/localService';
 
 @Component({
 	selector: 'app-login',
@@ -22,36 +23,40 @@ export class LoginComponent {
 	}
 	expiredToken = false;
 	private subscription: Subscription;
-	loginValid:number = 0;
 	loginForm: FormGroup;
+	loginValid:number = 0;
+	loginStatus:String;
 	isValid: boolean = true;
 	constructor(
 		private userSerive: UserService,
 		private router:Router,
-		private fb: FormBuilder
+		private fb: FormBuilder,
+		private local: localService
 	) {}
 	onSubmit(): void {
-		console.log(this.loginForm.get('username')?.value)
 		if (!this.loginForm.valid) {
-			console.log(false)
 			this.isValid = false;
 			setTimeout(() => {
 				this.isValid = true;
-			}, 5000);
+			}, 3000);
 			return;
 		} else {
 			this.form.username = this.loginForm.get('username')?.value;
 			this.form.password = this.loginForm.get('password')?.value;
 			this.userSerive.login(this.form).subscribe(
 				successResponse=>{
-					localStorage.setItem("Token", successResponse.Token);
-					this.loginValid=1;
+					// localStorage.setItem("Token", successResponse.Token);
+					this.local.saveData("Token", successResponse.Token);
+					this.loginStatus = "Connected Successfully";
+					this.loginValid = 1;
 					setTimeout(() => {
 						this.loginValid = 0
 						this.router.navigate(["/profile"]);
 					}, 3000);
 				},
 				(errorResponse: HttpErrorResponse) => {
+					console.log('sdfd')
+					this.loginStatus = "Invalid Credentials";
 					this.loginValid = -1;
 					setTimeout(() => {
 						this.loginValid = 0
@@ -77,7 +82,7 @@ export class LoginComponent {
 		  	return pattern.test(control.value) ? null : { invalidPassword: true };
 		};
 	}
-	
+
 	getError() {
 		if ( this. loginForm.get('username')?.hasError('required'))
 			return ("Username is required");

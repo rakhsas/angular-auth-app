@@ -22,10 +22,14 @@ export class RegisterComponent {
 	};
 	isValid: boolean = true;
 	registerValid: number = 0;
+	registerStatus:String;
 	loginForm: FormGroup;
 	Error: string = "";
 	constructor(private userService: UserService, private router: Router, private fb: FormBuilder) { }
 	onSubmit(): void {
+		console.log(this.loginForm.get('username')?.value);
+		console.log(this.loginForm.get('password')?.value);
+		console.log(this.loginForm.get('confirmPassword')?.value);
 		if (!this.loginForm.valid) {
 			// this.getError();
 			this.isValid = false;
@@ -40,6 +44,7 @@ export class RegisterComponent {
 				successResponse => {
 					console.log(successResponse)
 					if (successResponse.Token) {
+						this.registerStatus = "Account Created Successfully";
 						this.registerValid = 1;
 						setTimeout(() => {
 							this.router.navigate(["/profile"]);
@@ -47,6 +52,7 @@ export class RegisterComponent {
 					}
 				},
 				(errorResponse) => {
+					this.registerStatus = "Something went wrong!!";
 					this.registerValid = -1;
 					console.log(errorResponse);
 				}
@@ -64,7 +70,7 @@ export class RegisterComponent {
 		  confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
 		}, { validators: this.confirmPasswordValidator });
 	  }
-	
+
 	  // Custom validator for password pattern
 	  private passwordPatternValidator(): ValidatorFn {
 		return (control: AbstractControl): { [key: string]: any } | null => {
@@ -72,16 +78,16 @@ export class RegisterComponent {
 		  return pattern.test(control.value) ? null : { invalidPassword: true };
 		};
 	  }
-	
+
 	  // Custom validator for matching passwords
 	  private confirmPasswordValidator(control: AbstractControl): { [key: string]: any } | null {
 		const password = control.get('password');
 		const confirmPassword = control.get('confirmPassword');
-	
+
 		if (!password || !confirmPassword) {
 		  return null;
 		}
-	
+
 		return password.value === confirmPassword.value ? null : { mustMatch: true };
 	}
 	getError() {
